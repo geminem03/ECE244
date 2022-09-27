@@ -15,13 +15,15 @@
 
 #include <iostream>
 #include <string>
+#include <cstdio>
+#include <fstream>
 using namespace std;
 
 #include "globals.h"
 #include "GameState.h"
 
 // Function prototype for playMove
-void playMove(GameState&);
+void playMove(GameState &game_state);
 
 // The main function
 int main() {
@@ -46,24 +48,32 @@ int main() {
             cout << "Invalid board coordinates " << row << " " << col << endl << endl;
            continue;
         }
-        // The coordinates are valid; set the selectedRow and selectedColumn
-        // members of the game state to the read values
-        // Again, the corresponding mutators of GameState must be first
-        // implemented before this works
-            
+
+        /* The coordinates are valid; set the selectedRow and selectedColumn members 
+        of the game state to the read values .Again, the corresponding mutators of 
+        GameState must be first implemented before this works */
         // ECE244 Student: add your code here
+        cout << "Selected row " << row << " and column " << col << endl;
             
-        // Call playMove
-            
+        // Call playMove  
         // ECE244 Student: add your code here
+        playMove(game_state); 
             
         // Print the GameState object, as prescribed in the handout
-            
         // ECE244 Student: add your code here
+
+        //  print the newly updated gameboard 
+        cout << game_state.get_gameBoard(game_state.get_selectedRow(), game_state.get_selectedColumn()) << endl;
+        
+        // output value of validMove
+        cout << game_state.get_moveValid() << endl; 
+
+
+        // output value of gameOver and winCode
+        cout << "gameOver: " << game_state.get_gameOver()<< endl; 
+        cout << "winCode: "<< game_state.get_winCode() << endl; 
             
     }
-    
-
     return 0;
 }
 

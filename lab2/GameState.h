@@ -17,7 +17,7 @@
 
 #include "globals.h"
 
-class GameState {
+class GameState{
 private:
     int selectedRow;    // Game board row coordinate selected (in the range 0..boardSize-1)
     int selectedColumn; // Game board column coordinate selected (in the range 0..boardSize-1)
