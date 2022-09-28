@@ -1,0 +1,4 @@
+1. print loop is what is outputting the incorrect pattern 
+2. playMove is what is outputing the incorrect validMove response
+
+3. did not initialize gameboard as array properly 

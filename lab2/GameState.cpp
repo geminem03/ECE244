@@ -26,7 +26,12 @@ GameState::GameState(){
     gameOver = false;
     winCode = 0; 
     turn = true; 
-    gameBoard[boardSize][boardSize] = Empty;
+    
+    for(int i = 0; i < boardSize; i++){
+        for(int j = 0; j < boardSize; j++){
+            gameBoard[i][j] = {Empty};
+        }
+    }
 }
 
     // Return the selected row (in the range 0..boardSize-1)
@@ -105,6 +110,7 @@ GameState::GameState(){
         if((row >= 0) && (row <= boardSize - 1) &&(col >= 0) && (col <= boardSize - 1)){
             return gameBoard[row][col];
         }
+        return Empty;
     } 
 
     // Set the game board value at the board location at row and col to value

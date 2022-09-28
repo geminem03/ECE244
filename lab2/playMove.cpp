@@ -26,18 +26,15 @@ int value_winCode(GameState); //declaration of value_winCode function
 
 void playMove(GameState &game_state) {
 
-    int rowMove = game_state.get_selectedRow();
-    int colMove = game_state.get_selectedColumn();
-
-    if(game_state.get_gameBoard(rowMove, colMove) == Empty){ // determine if spot is empty
+    if(game_state.get_gameBoard(game_state.get_selectedRow(), game_state.get_selectedColumn()) == Empty){ // determine if spot is empty
 
         game_state.set_moveValid(true); //sets moveValid to true if conditions met 
 
         if(game_state.get_turn() == true){
-            game_state.set_gameBoard(rowMove, colMove, X);
+            game_state.set_gameBoard(game_state.get_selectedRow(), game_state.get_selectedColumn(), X);
         }
-        else{
-            game_state.set_gameBoard(rowMove, colMove, O);
+        else if(game_state.get_turn() == false){
+            game_state.set_gameBoard(game_state.get_selectedRow(), game_state.get_selectedColumn(), O);
         }
         game_state.set_turn(!game_state.get_turn());
 

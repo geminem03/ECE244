@@ -24,8 +24,6 @@ using namespace std;
 
 // Function prototype for playMove
 void playMove(GameState &game_state);
-void print_gameBaord(GameState &game_state);
-
 
 // The main function
 int main() {
@@ -58,7 +56,9 @@ int main() {
         cout << "Selected row " << row << " and column " << col << endl;
             
         // Call playMove  
-        // ECE244 Student: add your code here
+        // ECE244 Student: add your code here 
+        game_state.set_selectedRow(row);
+        game_state.set_selectedColumn(col);
         playMove(game_state); 
             
         // Print the GameState object, as prescribed in the handout
@@ -67,8 +67,8 @@ int main() {
         cout << "Board:" << endl;
 
         //  print the newly updated gameboard 
-        for(int row = 0; row <= boardSize - 1; row++){
-            for(int col = 0; col <= boardSize - 1; col++){
+        for(int row = 0; row <= boardSize -1; row++){
+            for(int col = 0; col <= boardSize -1; col++){
                 if(game_state.get_gameBoard(row, col) == Empty){
                     cout<< "B ";
                 }
@@ -78,9 +78,12 @@ int main() {
                 else if(game_state.get_gameBoard(row, col) == O){
                     cout << "O ";
                 }
+                else {
+                    cout << "A";
+                }
             }
             cout << endl;
-        }
+        } 
 
         // output value of validMove
         cout << boolalpha << "moveValid: " << game_state.get_moveValid() << endl; 
