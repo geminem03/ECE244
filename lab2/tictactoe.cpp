@@ -24,6 +24,8 @@ using namespace std;
 
 // Function prototype for playMove
 void playMove(GameState &game_state);
+void print_gameBaord(GameState &game_state);
+
 
 // The main function
 int main() {
@@ -61,19 +63,51 @@ int main() {
             
         // Print the GameState object, as prescribed in the handout
         // ECE244 Student: add your code here
+        cout << "Game state after playMove:" << endl;
+        cout << "Board:" << endl;
 
         //  print the newly updated gameboard 
-        cout << game_state.get_gameBoard(game_state.get_selectedRow(), game_state.get_selectedColumn()) << endl;
-        
-        // output value of validMove
-        cout << game_state.get_moveValid() << endl; 
+        for(int row = 0; row <= boardSize - 1; row++){
+            for(int col = 0; col <= boardSize - 1; col++){
+                if(game_state.get_gameBoard(row, col) == Empty){
+                    cout<< "B ";
+                }
+                else if(game_state.get_gameBoard(row, col) == X){
+                    cout << "X ";
+                }
+                else if(game_state.get_gameBoard(row, col) == O){
+                    cout << "O ";
+                }
+            }
+            cout << endl;
+        }
 
+        // output value of validMove
+        cout << boolalpha << "moveValid: " << game_state.get_moveValid() << endl; 
 
         // output value of gameOver and winCode
-        cout << "gameOver: " << game_state.get_gameOver()<< endl; 
-        cout << "winCode: "<< game_state.get_winCode() << endl; 
-            
+        cout << boolalpha << "gameOver: " << game_state.get_gameOver()<< endl; 
+        cout << "winCode: "<< game_state.get_winCode() << endl << endl << endl;
+
     }
     return 0;
 }
+
+/*void printBoard(){
+    for(int row = 0; row <= boardSize - 1; row++){
+            for(int col = 0; col <= boardSize - 1; col++){
+                if(game_state.get_gameBoard(row, col) == Empty){
+                    cout<< "B ";
+                }
+                else if(game_state.get_gameBoard(row, col) == X){
+                    cout << "X ";
+                }
+                else if(game_state.get_gameBoard(row, col) == O){
+                    cout << "O ";
+                }
+            }
+            cout << endl;
+        }
+
+} */
 

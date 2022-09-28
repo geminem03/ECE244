@@ -29,13 +29,17 @@ void playMove(GameState &game_state) {
     int rowMove = game_state.get_selectedRow();
     int colMove = game_state.get_selectedColumn();
 
-    if(game_state.get_gameBoard(rowMove, colMove) == 0){ // determine if spot is empty
+    if(game_state.get_gameBoard(rowMove, colMove) == Empty){ // determine if spot is empty
 
         game_state.set_moveValid(true); //sets moveValid to true if conditions met 
 
-        //update gameboard at the appropriate location for either X or O depending on value of get_turn()
-        game_state.set_gameBoard(rowMove, colMove, game_state.get_turn() ? 1 : -1 ); // get_turn = 1 if true and -1 if false
-        game_state.set_turn(!game_state.get_turn()); // switches the value of turn to the opposite of what was just played
+        if(game_state.get_turn() == true){
+            game_state.set_gameBoard(rowMove, colMove, X);
+        }
+        else{
+            game_state.set_gameBoard(rowMove, colMove, O);
+        }
+        game_state.set_turn(!game_state.get_turn());
 
         // get value of wincode to determine if game over
         int winCode = value_winCode(game_state);
@@ -43,11 +47,30 @@ void playMove(GameState &game_state) {
             game_state.set_winCode(winCode);
             game_state.set_gameOver(true);
         }
-        //set conditions for cats game
+        //set conditions for tie game
+        else{
+            bool gameOver = true;
+            for (int i = 0; i <= boardSize - 1; i++){
+                for (int j = 0; j <= boardSize - 1; j++){
+                    if (game_state.get_gameBoard(i, j) == Empty){ // if there is empty spot on the game, game not over
+                        gameOver = false;
+                    }
+                }
+            }
+            if(gameOver == true){
+                game_state.set_gameOver(true); // set gameover to true if flag = true
+            }
+        }
     }
-    
-}
 
+    else{
+        game_state.set_moveValid(false); // if none of these conditions met, then catch errors in moveValid function
+    }
+
+}
+        
+
+// function to set conditions for the winCode function
 int value_winCode(GameState game_state){
     // variables for top row
     int r0_c0 = game_state.get_gameBoard(0,0);
