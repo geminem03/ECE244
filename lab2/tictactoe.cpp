@@ -47,7 +47,7 @@ int main() {
         // Check that the read row and column values are valid grid coordinates
         if ( (row < 0) || (row > 2) || (col < 0) || (col > 2) ) {
             cout << "Invalid board coordinates " << row << " " << col << endl << endl;
-           continue;
+            continue;
         }
         else{
             cout << "Selected row " << row << " and column " << col << endl;

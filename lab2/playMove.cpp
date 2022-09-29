@@ -89,37 +89,37 @@ int value_winCode(GameState game_state){
     int r2_c1 = game_state.get_gameBoard(2, 1);
     int r2_c2 = game_state.get_gameBoard(2, 2);
 
-    // conditions for winCode 1:
-    if((r0_c0 != 0) && (r0_c0 == r0_c1) && (r0_c0 == r0_c2)){
-        return 1;
-    }
-    // conditions for winCode 2:
-    else if((r1_c0 != 0) && (r1_c0 == r1_c1) && (r1_c0 == r1_c2)){
-        return 2;
-    }
-    // conditions for winCode 3:
-    else if((r2_c0 != 0) && (r2_c0 == r2_c1) && (r2_c0 == r2_c2)){
-        return 3;
-    }
-    // conditions for winCode 4:
-    else if((r0_c0 != 0) && (r0_c0 == r1_c0) && (r0_c0 == r2_c0)){
-        return 4;
-    }
-    // conditions for winCode 5:
-    else if((r0_c1 != 0) && (r0_c1 == r1_c1) && (r0_c1 == r2_c1)){
-        return 5;
-    }
-    // conditions for winCode 6:
-    else if((r0_c2 != 0) && (r0_c2 == r1_c2) && (r0_c2 == r2_c2)){
-        return 6;
+    // conditions for winCode 8:
+    if((r2_c0 != 0) && (r2_c0 == r1_c1) && (r2_c0 == r0_c2)){
+        return 8;
     }
     // conditions for winCode 7:
     else if((r0_c0 != 0) && (r0_c0 == r1_c1) && (r0_c0 == r2_c2)){
         return 7;
     }
-    // conditions for winCode 8:
-    else if((r2_c0 != 0) && (r2_c0 == r1_c1) && (r2_c0 == r0_c2)){
-        return 8;
+    // conditions for winCode 6:
+    else if((r0_c2 != 0) && (r0_c2 == r1_c2) && (r0_c2 == r2_c2)){
+        return 6;
+    }
+    // conditions for winCode 5:
+    else if((r0_c1 != 0) && (r0_c1 == r1_c1) && (r0_c1 == r2_c1)){
+        return 5;
+    }
+    // conditions for winCode 4:
+    else if((r0_c0 != 0) && (r0_c0 == r1_c0) && (r0_c0 == r2_c0)){
+        return 4;
+    }
+    // conditions for winCode 3:
+    else if((r2_c0 != 0) && (r2_c0 == r2_c1) && (r2_c0 == r2_c2)){
+        return 3;
+    }
+    // conditions for winCode 2:
+    else if((r1_c0 != 0) && (r1_c0 == r1_c1) && (r1_c0 == r1_c2)){
+        return 2;
+    }
+    // conditions for winCode 1:
+    else if((r0_c0 != 0) && (r0_c0 == r0_c1) && (r0_c0 == r0_c2)){
+        return 1;
     }
     // if none of the conditions met, game still going so winCode = 0
     else{
