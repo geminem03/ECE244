@@ -30,13 +30,18 @@ void playMove(GameState &game_state) {
 
         game_state.set_moveValid(true); //sets moveValid to true if conditions met 
 
-        if(game_state.get_turn() == true){
+        // Set the cell to either a 1 if turn is true, or -1 if turn is false
+        game_state.set_gameBoard(game_state.get_selectedRow(), game_state.get_selectedColumn(), game_state.get_turn() ? 1 : -1);
+        // Switch the turn to the other player
+        game_state.set_turn(!game_state.get_turn());
+
+        /*if(game_state.get_turn() == true){
             game_state.set_gameBoard(game_state.get_selectedRow(), game_state.get_selectedColumn(), X);
         }
         else if(game_state.get_turn() == false){
             game_state.set_gameBoard(game_state.get_selectedRow(), game_state.get_selectedColumn(), O);
         }
-        game_state.set_turn(!game_state.get_turn());
+        game_state.set_turn(!game_state.get_turn()); */
 
         // get value of wincode to determine if game over
         int winCode = value_winCode(game_state);

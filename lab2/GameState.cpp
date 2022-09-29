@@ -47,7 +47,7 @@ GameState::GameState(){
     // Set the selected row to value in the range (in the range 0..boardSize-1)
     // An out of range value is ignored and the function just returns
     void GameState::set_selectedRow(int value){
-        if((value >= 0) && (value < boardSize -1)){
+        if((value >= 0) && (value <= boardSize -1)){
             selectedRow = value;
         }
     }    
@@ -55,7 +55,7 @@ GameState::GameState(){
     // Set the selected column in the range (in the range 0..boardSize-1)
     // An out of range value is ignored and the function just returns
     void GameState::set_selectedColumn(int value){
-        if((value >= 0) && (value < boardSize -1)){
+        if((value >= 0) && (value <= boardSize -1)){
             selectedColumn = value;
         }
     }  
@@ -107,7 +107,7 @@ GameState::GameState(){
     // This method checks that row, col and value are in range/valid
     // and if not it returns Empty
     int GameState::get_gameBoard(int row, int col){
-        if((row >= 0) && (row <= boardSize - 1) &&(col >= 0) && (col <= boardSize - 1)){
+        if((row >= 0) && (row <= boardSize - 1) && (col >= 0) && (col <= boardSize - 1)){
             return gameBoard[row][col];
         }
         return Empty;

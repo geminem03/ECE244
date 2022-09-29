@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/gemma/OneDrive/Laptop_Files/VSCODE/ECE244/github/lab2",
-      "program": "c:/Users/gemma/OneDrive/Laptop_Files/VSCODE/ECE244/github/lab2/build/Debug/outDebug",
+      "cwd": "c:/Users/gemma/OneDrive/Laptop/ECE244/labs/lab2",
+      "program": "c:/Users/gemma/OneDrive/Laptop/ECE244/labs/lab2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
