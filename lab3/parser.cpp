@@ -33,7 +33,7 @@ int num_keywords = 7;
 int num_shapeTypes = 4;
 string name, type;
 int x_location, y_location, x_size, y_size, angle;
-bool nameExists = true;
+bool nameExists = false;
 
 
 /* Commands
@@ -66,6 +66,7 @@ bool fewArgs(stringstream &line);
 bool invalidArg(stringstream &line);
 bool manyArgs(stringstream &line);
 
+
 // can only have one database at a time 
 // if a new one is called, delete all the shapes and delete the database
 // eof command when deleteOne is called
@@ -85,24 +86,25 @@ int main(){
 
             if(command == keyWordsList[1]){
                 if (live_database == true){
-                lineStream >> max_shapes;
-                for(int i = 0; i < shapeCount; i++){
-                    if(shapesArray[i] != nullptr){
-                        delete shapesArray[i];
-                        shapesArray[i] = nullptr;
-                        shapeCount --;
+                    lineStream >> max_shapes;
+                    for(int i = 0; i < shapeCount; i++){
+                        if(shapesArray[i] != nullptr){
+                            delete shapesArray[i];
+                            shapesArray[i] = nullptr;
+                            shapeCount --;
+                        }
                     }
-                }
-                if(shapesArray != nullptr){
-                    delete [] shapesArray;
-                    shapesArray = nullptr;
-                    shapeCount = 0;
-                } 
-                shapesArray = new Shape*[max_shapes];
-                for(int i = 0; i < max_shapes; i++){
-                    shapesArray[i] = nullptr; 
-                }
-                cout << "New database: max shapes is " << max_shapes << endl; 
+                    if(shapesArray != nullptr){
+                        delete [] shapesArray;
+                        shapesArray = nullptr;
+                        shapeCount = 0;
+                    } 
+                    shapesArray = new Shape*[max_shapes];
+                    for(int i = 0; i < max_shapes; i++){
+                        shapesArray[i] = nullptr; 
+                    }
+                    live_database = true;
+                    cout << "New database: max shapes is " << max_shapes << endl;
                 }
                 else{
                     lineStream >> max_shapes;
@@ -110,84 +112,80 @@ int main(){
                     for(int i = 0; i < max_shapes; i++){
                         shapesArray[i] = nullptr;
                     }
-                    cout << "New database: max shapes is " << max_shapes << endl; 
                     live_database = true; 
+                    cout << "New database: max shapes is " << max_shapes << endl;
                 }
             } 
             else if(command == keyWordsList[2]){
                 lineStream >> name;
                 // error check validity of arugment
-                if(invalidArg(lineStream)) break;
-                if(fewArgs(lineStream)) break;
-                // error check validity of name
-                if(restrictedWord(name)) break;
-                //name exists
+                if(fewArgs(lineStream)) goto jmp;
+                if(restrictedWord(name)) goto jmp;
                 for(int i = 0; i < shapeCount; i++){
                     if(shapesArray[i] != nullptr && shapesArray[i]->getName() == name){
                         shapeNameExists(name);
-                        nameExists = true;
-                        break;
+                        goto jmp;
                     }
                 }
-                
+
                 lineStream >> type; 
-                // error check validity of arugment
-                if(invalidArg(lineStream)) break;
+                if(fewArgs(lineStream)) goto jmp;
                 // error check validity of type
-                if(invalidType(type)) break;
-                // error check too few arugments
-                if(fewArgs(lineStream)) break;
+                if(invalidType(type)) goto jmp;
 
                 lineStream >> x_location;
                 // error check validity of arugment
-                if(invalidArg(lineStream)) break;
-                // error check x position
+                if(invalidArg(lineStream)) goto jmp;
+                if(fewArgs(lineStream)) goto jmp;
                 if(x_location < 0){
                     invalidValue();
-                    break;
+                    goto jmp;
                 }
-                if(fewArgs(lineStream)) break;
 
                 lineStream >> y_location;
                 // error check validity of arugment
-                if(invalidArg(lineStream)) break;
-                // error check y location
+                if(invalidArg(lineStream)) goto jmp;
+                if(fewArgs(lineStream)) goto jmp;
                 if(y_location < 0){
                     invalidValue();
-                    break;
+                    goto jmp;
                 }
-                if(fewArgs(lineStream)) break;
 
                 lineStream >> x_size;
                 // error check validity of arugment
-                if(invalidArg(lineStream)) break;
-                // error check x size
+                if(invalidArg(lineStream)) goto jmp;
+                if(fewArgs(lineStream)) goto jmp;
                 if(x_size < 0){
                     invalidValue();
-                    break;
+                    goto jmp;
                 }
-                if(fewArgs(lineStream)) break;
 
                 lineStream >> y_size;
+                if(fewArgs(lineStream)) goto jmp;
+                if(lineStream.peek() == '.'){
+                    invalidArgument();
+                    goto jmp;
+                }
                 // error check validity of arugment
-                if(invalidArg(lineStream)) break;
+                if(invalidArg(lineStream)) goto jmp;
                 // error check y size
                 if(y_size < 0){
                     invalidValue();
-                    break;
+                    goto jmp;
                 }
-                if(fewArgs(lineStream)) break;
+
                 // check for leftover input args
-                if(manyArgs(lineStream)) break;
+                if(manyArgs(lineStream)) goto jmp;
 
                 if(type == "circle" && x_size != y_size){
                     invalidValue();
+                    goto jmp;
                 }
 
                 // check that there is space in database
                 if(shapeCount == max_shapes){
                     shapeArrayIsFull();
-                    break;
+                    goto jmp;
                 }
 
                 if (shapesArray[shapeCount] == nullptr){
@@ -199,105 +197,128 @@ int main(){
             }
             else if(command == keyWordsList[3]){
                 lineStream >> name;
-                // error check validity of arugment
-                if(invalidArg(lineStream)) break;
-                if(fewArgs(lineStream)) break;
-                // error check validity of name
-                if(restrictedWord(name)) break;
-                //name exists
+                if(fewArgs(lineStream)) goto jmp;
+                bool nameExists = false;
                 for(int i = 0; i < shapeCount; i++){
                     if(shapesArray[i] != nullptr && shapesArray[i]->getName() == name){
                         nameExists = true;
                         break;
                     }
+                    else if(shapesArray[i] == nullptr){
+                        continue;
+                    }
                 }
                 if(nameExists == false){
                     shapeNameNotFound(name);
+                    goto jmp;
                 }
 
                 lineStream >> x_location;
                 // error check validity of arugment
-                if(invalidArg(lineStream)) break;
-                if(fewArgs(lineStream)) break;
+                if(invalidArg(lineStream)) goto jmp;
+                if(fewArgs(lineStream)) goto jmp;
                 // error check x position
                 if(x_location < 0){
                     invalidValue();
-                    break;
+                    goto jmp;
+                }
+                if(lineStream.eof()){
+                    tooFewArguments();
+                    goto jmp;
                 }
 
                 lineStream >> y_location;
+                if(lineStream.peek() == '.'){
+                    invalidArgument();
+                    goto jmp;
+                }
                 // error check validity of arugment
-                if(invalidArg(lineStream)) break;
-                if(fewArgs(lineStream)) break;
+                if(invalidArg(lineStream)) goto jmp;
                 // error check y location
                 if(y_location < 0){
                     invalidValue();
-                    break;
+                    goto jmp;
                 }
     
-                // error check few arugments
-                if(fewArgs(lineStream)) break;
-                if(manyArgs(lineStream)) break;
+                // error check few arugment
+                if(manyArgs(lineStream)) goto jmp;
 
 
                 for(int j = 0; j < shapeCount; j++){
-                    if ((shapesArray[j]->getName() == name) && (shapesArray[j] != NULL)){
+                    if (shapesArray[j] != nullptr && shapesArray[j]->getName() == name){
                         shapesArray[j]->setXlocation(x_location);
                         shapesArray[j]->setYlocation(y_location);
                         cout << "Moved " << name << " to " << x_location << ' ' << y_location << endl;
                         break;
                     }
                 }
-                if(nameExists == false){
-                    shapeNameNotFound(name);
-                }
             }
             else if(command == keyWordsList[4]){
                 lineStream >> name;
-                // error check validity of arugment
-                if(invalidArg(lineStream)) break;
-                if(fewArgs(lineStream)) break;
-                // error check validity of name
-                if(restrictedWord(name)) break;
+                if(fewArgs(lineStream)) goto jmp;
                 //name exists
+                bool nameExists = false;
                 for(int i = 0; i < shapeCount; i++){
                     if(shapesArray[i] != nullptr && shapesArray[i]->getName() == name){
                         nameExists = true;
                         break;
                     }
+                    else if(shapesArray[i] == nullptr){
+                        continue;
+                    }
                 }
                 if(nameExists == false){
                     shapeNameNotFound(name);
+                    goto jmp;
+                }
+                if(lineStream.eof()){
+                    tooFewArguments();
+                    goto jmp;
                 }
 
                 lineStream >> angle;
+                if(lineStream.peek() == '.'){
+                    invalidArgument();
+                    goto jmp;
+                }
                 // error check validity of arugment
-                if(invalidArg(lineStream)) break;;
+                if(invalidArg(lineStream)) goto jmp;
                 // valid roation value
                 if(angle < 0 || angle > 360){
                     invalidValue();
-                    break;
+                    goto jmp;
                 }
-                if(fewArgs(lineStream)) break;
 
                 // valid num args total 
-               if(manyArgs(lineStream)) break;
+                if(manyArgs(lineStream)) goto jmp;
 
                 for(int j = 0; j < shapeCount; j++){
-                    if ((shapesArray[j]->getName() == name) && (shapesArray[j] != NULL)){
+                    if (shapesArray[j] != nullptr && shapesArray[j]->getName() == name){
                         shapesArray[j]->setRotate(angle);
                         cout << "Rotated " << name << " by " << angle << " degrees" << endl;
                         break;
                     }
                 }
-                if(nameExists == false){
-                    shapeNameNotFound(name);
-                }
             }
             else if(command == keyWordsList[5]){
+                lineStream >> name;
+                if(fewArgs(lineStream)) goto jmp;
+                bool nameExists = false;
+                for(int i = 0; i < shapeCount; i++){
+                    if(shapesArray[i] != nullptr && shapesArray[i]->getName() == name){
+                        nameExists = true;
+                        break;
+                    }
+                    else if(shapesArray[i] == nullptr){
+                        continue;
+                    }
+                }
+                if(nameExists == false && name != keyWordsList[0]){
+                    shapeNameNotFound(name);
+                    goto jmp;
+                }
                 if(name == keyWordsList[0]){
-                    if(fewArgs(lineStream)) break;
-                    if(manyArgs(lineStream)) break;
+                    if(manyArgs(lineStream)) goto jmp;
                     else{
                         cout << "Drew all shapes" << endl;
                         for(int i = 0; i < shapeCount; i++){
@@ -306,38 +327,41 @@ int main(){
                             }
                         }
                     }
-                    break;
                 }
+                else{
+                    if (nameExists){
+                        if(manyArgs(lineStream)) goto jmp;
+                        for(int j = 0; j < shapeCount; j++){
+                            if (shapesArray[j] != nullptr && shapesArray[j]->getName() == name){
+                                cout << "Drew ";
+                                shapesArray[j]->draw();
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(manyArgs(lineStream)) goto jmp;
+            }
+            else if(command == keyWordsList[6]){
+                lineStream >> name;
+                if(fewArgs(lineStream)) goto jmp;
+                bool nameExists = false;
                 for(int i = 0; i < shapeCount; i++){
                     if(shapesArray[i] != nullptr && shapesArray[i]->getName() == name){
                         nameExists = true;
                         break;
                     }
-                }
-                if(nameExists == false){
-                    if(fewArgs(lineStream)) break;
-                    else{ 
-                        shapeNameNotFound(name);
-                        break;
+                    else if(shapesArray[i] == nullptr){
+                        continue;
                     }
                 }
-    
-                for(int j = 0; j < shapeCount; j++){
-                    if(fewArgs(lineStream)) break;
-                    if(manyArgs(lineStream)) break;
-                    else{ 
-                        if (name == shapesArray[j]->getName() && shapesArray[j] != nullptr){
-                            cout << "Drew ";
-                            shapesArray[j]->draw();
-                            break;
-                        }
-                    }
+                if(nameExists == false && name != keyWordsList[0]){
+                    shapeNameNotFound(name);
+                    goto jmp;
                 }
-            }
-            else if(command == keyWordsList[6]){
                 if (name == keyWordsList[0]){ // delete all
-                    if(fewArgs(lineStream)) break;
-                    if(manyArgs(lineStream)) break;
+                    if (manyArgs(lineStream)) goto jmp;
+                    if(manyArgs(lineStream)) goto jmp;
                     else{
                         cout << "Deleted: all shapes" << endl; 
                         for(int j = 0; j < shapeCount; j++){
@@ -347,55 +371,36 @@ int main(){
                             }
                         }
                     }
-                    break;
                 }
-                for(int j = 0; j < shapeCount; j++){
-                    if(fewArgs(lineStream)) break;
-                    if(manyArgs(lineStream)) break;
-                    else{ 
-                        if (name == shapesArray[j]->getName() && shapesArray[j] != nullptr){
-                            cout << "Drew ";
-                            shapesArray[j]->draw();
-                            break;
-                        }
-                    }
-                }
-
-                for(int i = 0; i < shapeCount; i++){
-                    if(shapesArray[i] != nullptr && shapesArray[i]->getName() == name){
-                        nameExists = true;
-                        break;
-                    }
-                }
-                if(nameExists == true){
-                    if(fewArgs(lineStream)) break;
-                    if(manyArgs(lineStream)) break;
-                    else{
-                        cout << "Deleted shape " << name << endl;
-                        for (int j = 0; j < shapeCount; j++) {
-                            if ((shapesArray[j]->getName() == name) && (shapesArray[j] != nullptr)) {
+                else{
+                    if(nameExists){
+                        if(manyArgs(lineStream)) goto jmp;
+                        for(int j = 0; j < shapeCount; j++){
+                            if(shapesArray[j] != nullptr && shapesArray[j]->getName() == name) {
+                                cout << "Deleted shape " << name << endl;
                                 delete shapesArray[j];
-                                shapesArray[j] = NULL;
+                                shapesArray[j] = nullptr;
                                 break;
-                            }
+                            }      
                         }
                     }
                 }
             }
             else{
                 invalidCommand();
+                goto jmp;
             }
-            cout << "> ";       
+            jmp: cout << "> ";       
             getline(cin, line);
     }  // End input loop until EOF.
 
     // delete memory for the array  
     for(int i = 0; i < max_shapes; i++){
         delete shapesArray[i];
-        shapesArray[i] = NULL;
+        shapesArray[i] = nullptr;
     }
     delete [] shapesArray;
-    shapesArray = NULL;
+    shapesArray = nullptr;
     
     return 0;
 
@@ -454,3 +459,4 @@ bool manyArgs(stringstream &line){
     }
     return false;
 }
+

@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/gemma/OneDrive/Laptop/ECE244/labs/txt",
-      "program": "c:/Users/gemma/OneDrive/Laptop/ECE244/labs/txt/build/Debug/outDebug",
+      "cwd": "c:/Users/gemma/OneDrive/Laptop/ECE244/labs/lab4",
+      "program": "c:/Users/gemma/OneDrive/Laptop/ECE244/labs/lab4/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
