@@ -1,0 +1,44 @@
+
+for(int i = 0; i < ???; i++){
+    if(GroupList[i] != nullptr) { continue; }
+    else{
+        GroupList[i] = new GroupNode(name);
+    }
+}
+
+GroupNode* p = head;
+GroupNode *prev = trail;
+while (p->getNext() != nullptr){
+    p = p->getNext
+}
+p->setNext(newNode)
+
+
+
+
+// adding new shape to the pool group
+if(myShapeList == nullptr){ // checks if there is already a shapeList
+    myShapeList = new ShapeList();
+}
+else{
+    for(int i = 0 ; i < ???; i++){
+        if(ShapeList[i] != nullptr) { continue; }
+        else { // inserts newly created shape at the back of the list 
+            ShapeList[i] = new ShapeNode->insert(newShape);
+        }
+    }
+}
+
+if(myShapeList == nullptr){ // checks if there is already a shapeList
+    myShapeList = new ShapeList();
+}
+else{
+    ShapeNode* p
+    while(ShapeList->getNext != nullptr){
+        p = p->getNext();
+    }
+    p->setNext(newShape)
+}
+
+*****newShape(name, type, xloc, yloc, xsize, ysize);******
+

@@ -13,7 +13,7 @@
 //  Write the implementation (and only the implementation) of the GroupNode class below
 
 #include "GroupNode.h"
-using namespace std;
+#include <iostream>
 
     GroupNode::GroupNode(string n){
         this->name = n;

@@ -27,9 +27,8 @@ using namespace std;
             delete p;
             p = prev;
         }
-    }                     // deletes all list nodes, including all the ShapeList
-                                      // attached to each GroupNode
-    
+    }                
+
     GroupNode* GroupList::getHead() const {return head;}
 
     void GroupList::setHead(GroupNode* ptr) {head = ptr;}
@@ -41,6 +40,7 @@ using namespace std;
         p->setNext(s);
 
     }   
+    
     GroupNode* GroupList::remove(string name) {
 	    GroupNode* removeptr = head;
 	    GroupNode* prev = nullptr;

@@ -23,42 +23,137 @@ using namespace std;
 #include "ShapeList.h"
 #include "GroupList.h"
 
-// This is a pointer to the groups list
-// The list itseld must be allocated
 GroupList* gList;
 
-// ECE244 Student: you may want to add the prototype of
-// helper functions you write here
+// Error functions 
+void invalidName () { cout << "Error: invalid name" << endl; }
+void nameExists (string name) { cout << "Error: " << name << " exists" << endl; }
+void shapeNameNotFound (string name) { cout << "Error: shape " << name << " not found" << endl;}
+void groupNameNotFound (string name) { cout << "Error: group " << name << " not found" << endl;}
+
+// Helper functions 
+bool restrictedWord(string name);
+bool shapeExists(string name);
+bool groupExists(string name);
+GroupNode* findShape(string name);
+GroupNode* findGroup(string name);
+
+
+// Global variables 
+string name, type;
+int xloc, yloc, xsize, ysize;
+string shapeName, groupName;
+
 
 int main() {
     // Create the groups list
     gList = new GroupList();
     
-    // Create the poo group and add it to the group list
+    // Create the pool group and add it to the group list
     GroupNode* poolGroup = new GroupNode(keyWordsList[NUM_KEYWORDS-1]);
     gList->insert(poolGroup);
     
     string line;
     string command;
     
-    cout << "> ";         // Prompt for input
-    getline(cin, line);    // Get a line from standard input
+    cout << "> ";       
+    getline(cin, line);   
 
     while ( !cin.eof () ) {
-        // Put the line in a linestream for parsing
-        // Making a new sstream for each line so flags etc. are cleared
         stringstream lineStream (line);
-        
-        // Read from string stream into the command
-        // The only way this can fail is if the eof is encountered
         lineStream >> command;
 
-        // Check for the command and act accordingly
-        // ECE244 Student: Insert your code here
+        if(command == keyWordsList[0]) { //create shape
+            lineStream >> name;
+            if (restrictedWord(name)) goto jmp; // check if the name is one of the restricted words
+            if(shapeExists(name) || groupExists(name)){ // check if it's already been used 
+                nameExists(name);
+                goto jmp;
+            }
+            lineStream >> type;
+            lineStream >> xloc;
+            lineStream >> yloc;
+            lineStream >> xsize;
+            lineStream >> ysize;
+            // insert new shape into list 
+            Shape* newShape =  new Shape(name, type, xloc, yloc, xsize, ysize);
+            ShapeNode* shapePtr = new ShapeNode();
+            shapePtr->setShape(newShape);
+            shapePtr->getShape()->draw();
+            poolGroup->getShapeList()->insert(shapePtr);
+        }
+        else if(command == keyWordsList[1]){ // create group
+            lineStream >> name;
+            if(!groupExists(name)){ // check if it's already been used 
+                groupNameNotFound(name);
+                goto jmp;
+            }
+            GroupNode* newGroup = new GroupNode(name);
+            gList->insert(newGroup);
+            cout << name << ": " << "group" << endl;
+        }
+        else if(command == keyWordsList[2]){ // transfer to new group 
+            lineStream >> shapeName;
+            if(shapeExists(shapeName)){
+                lineStream >> groupName;
+                if(groupExists(groupName)){
+                    GroupNode* srcShape = findShape(shapeName);
+                    GroupNode* destGroup = findGroup(groupName);
+                    destGroup->getShapeList()->insert(srcShape->getShapeList()->remove(shapeName));
+                    cout << "moved " << shapeName << " to " << groupName << endl;
+                }
+                else{
+                    groupNameNotFound(name);
+                    goto jmp;
+                }
+            }
+            else{
+                shapeNameNotFound(name);
+                goto jmp;
+            }
+        }
+        else if(command == keyWordsList[3]){ // delete shape/group
+            lineStream >> name;
+            if(shapeExists(name)){
+                GroupNode* deleteShape = findShape(name);
+                if(deleteShape != nullptr){
+                    delete deleteShape->getShapeList()->remove(name);
+                    cout << "deleted: " << name << endl;
+                }
+                else { 
+                    shapeNameNotFound(name);
+                    goto jmp;
+                }
+            }
+            else if(groupExists(name)){
+                GroupNode* deleteGroup = findGroup(name);
+                if(deleteGroup != nullptr){
+                    delete gList->remove(name);
+                    cout << "deleted: " << name << endl;
+
+                }
+                else{
+                    groupNameNotFound(name);
+                    goto jmp;
+                }
+            }
+            else{
+                shapeNameNotFound(name);
+                goto jmp;
+            }
+        }
+        else if(command == keyWordsList[4]){ // draw shape/group
+            cout << "drawing: " << endl;
+            gList->print();
+        } 
+        else {
+            cout << "****** Error: invalid command ******" << endl;
+            goto jmp;
+        }
         
         // Once the command has been processed, prompt for the
         // next command
-        cout << "> ";          // Prompt for input
+        jmp: cout << "> ";    
         getline(cin, line);
         
     }  // End input loop until EOF.
@@ -66,3 +161,51 @@ int main() {
     return 0;
 }
 
+
+bool restrictedWord(string name) {
+    for (int i = 0; i < NUM_KEYWORDS; i++) {
+        if (name == keyWordsList[i]) {
+            invalidName();
+            return true;
+        }
+    }
+    for (int i = 0; i < NUM_TYPES; i++){
+        if (name == shapeTypesList[i]){
+            invalidName();
+            return true;
+        }
+    }
+    return false;
+}
+bool shapeExists(string name){
+    GroupNode* p = gList->getHead();
+    while(p != nullptr){
+        if(p->getShapeList()->find(name)) return true;
+        p = p->getNext();
+    }
+    return false;
+}
+bool groupExists(string name){
+    GroupNode* p = gList->getHead();
+    while(p != nullptr){
+        if(p->getName() == name) return true;
+        p = p->getNext();
+    }
+    return false;
+}
+GroupNode* findShape(string name){
+    GroupNode* p = gList->getHead();
+    while(p != nullptr){
+        if(p->getName() == name) return p;
+        p = p->getNext();
+    }
+    return nullptr;
+}
+GroupNode* findGroup(string name){
+    GroupNode* p = gList->getHead();
+    while(p != nullptr){
+        if(p->getName() == name) return p;
+        p = p->getNext();
+    }
+    return nullptr;
+}
