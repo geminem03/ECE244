@@ -35,7 +35,7 @@ void groupNameNotFound (string name) { cout << "Error: group " << name << " not 
 bool restrictedWord(string name);
 bool shapeExists(string name);
 bool groupExists(string name);
-GroupNode* findShape(string name);
+ShapeNode* findShape(string name);
 GroupNode* findGroup(string name);
 
 
@@ -84,8 +84,8 @@ int main() {
         }
         else if(command == keyWordsList[1]){ // create group
             lineStream >> name;
-            if(!groupExists(name)){ // check if it's already been used 
-                groupNameNotFound(name);
+            if(groupExists(name)){ // check if it's already been used 
+                nameExists(name);
                 goto jmp;
             }
             GroupNode* newGroup = new GroupNode(name);
@@ -97,17 +97,17 @@ int main() {
             if(shapeExists(shapeName)){
                 lineStream >> groupName;
                 if(groupExists(groupName)){
-                    GroupNode* srcShape = findShape(shapeName);
+                    ShapeNode* srcShape = findShape(shapeName);
                     GroupNode* destGroup = findGroup(groupName);
-                    destGroup->getShapeList()->insert(srcShape->getShapeList()->remove(shapeName));
+                    destGroup->getShapeList()->insert(srcShape);
                     cout << "moved " << shapeName << " to " << groupName << endl;
                 }
-                else{
+                else if(!groupExists(groupName)){
                     groupNameNotFound(name);
                     goto jmp;
                 }
             }
-            else{
+            else if(!shapeExists(shapeName)){
                 shapeNameNotFound(name);
                 goto jmp;
             }
@@ -115,12 +115,12 @@ int main() {
         else if(command == keyWordsList[3]){ // delete shape/group
             lineStream >> name;
             if(shapeExists(name)){
-                GroupNode* deleteShape = findShape(name);
+                ShapeNode* deleteShape = findShape(name);
                 if(deleteShape != nullptr){
                     delete deleteShape->getShapeList()->remove(name);
                     cout << "deleted: " << name << endl;
                 }
-                else { 
+                else if(!shapeExists(name)){ 
                     shapeNameNotFound(name);
                     goto jmp;
                 }
@@ -132,12 +132,12 @@ int main() {
                     cout << "deleted: " << name << endl;
 
                 }
-                else{
+                else if (!groupExists(name)){
                     groupNameNotFound(name);
                     goto jmp;
                 }
             }
-            else{
+            else if(!shapeExists(name) && !groupExists(name)){
                 shapeNameNotFound(name);
                 goto jmp;
             }
@@ -193,11 +193,16 @@ bool groupExists(string name){
     }
     return false;
 }
-GroupNode* findShape(string name){
+ShapeNode* findShape(string name){
     GroupNode* p = gList->getHead();
     while(p != nullptr){
-        if(p->getName() == name) return p;
-        p = p->getNext();
+        ShapeList* shapelist = p->getShapeList();
+        if(!shapelist) continue;
+        ShapeNode* find = shapelist->getHead();
+        while(find != nullptr){
+            if(find->getShape()->getName() == name) return find;
+            find = find->getNext();
+        }
     }
     return nullptr;
 }

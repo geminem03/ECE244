@@ -15,6 +15,7 @@
 
 #include "GroupList.h"
 #include "GroupNode.h"
+#include <assert.h>
 using namespace std;
 
     GroupList::GroupList() {head = nullptr;} 
@@ -34,13 +35,20 @@ using namespace std;
     void GroupList::setHead(GroupNode* ptr) {head = ptr;}
 
     void GroupList::insert(GroupNode* s){
-        s->setNext(nullptr);
-        GroupNode *p = head;
-        while(p != nullptr) p = p->getNext();
-        p->setNext(s);
-
+        if(head == nullptr){
+            head = s;
+        }
+        else{
+            s->setNext(nullptr);
+            GroupNode *p = head;
+            while(p->getNext() != nullptr) {
+                p = p->getNext();
+            }
+            assert(p != nullptr);
+            p->setNext(s);
+        }
     }   
-    
+
     GroupNode* GroupList::remove(string name) {
 	    GroupNode* removeptr = head;
 	    GroupNode* prev = nullptr;
