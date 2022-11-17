@@ -116,8 +116,8 @@ int main() {
             lineStream >> name;
             if(shapeExists(name)){
                 ShapeNode* deleteShape = findShape(name);
-                if(deleteShape != nullptr){
-                    delete deleteShape->getShapeList()->remove(name);
+                if(deleteShape->getNext() != nullptr){
+                    delete deleteShape->getShape();
                     cout << "deleted: " << name << endl;
                 }
                 else if(!shapeExists(name)){ 
