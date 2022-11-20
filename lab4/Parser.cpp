@@ -108,7 +108,8 @@ int main() {
                 if(groupExists(groupName)){
                     ShapeNode* srcShape = findShape(shapeName);
                     GroupNode* destGroup = findGroup(groupName);
-                    //GroupNode* srcGroup = findShapeGroup(shapeName);
+                    GroupNode* srcGroup = findShapeGroup(shapeName);
+                    srcGroup->getShapeList()->remove(shapeName);
                     destGroup->getShapeList()->insert(srcShape);
 
 
