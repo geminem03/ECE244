@@ -176,6 +176,7 @@ int main() {
         
     }  // End input loop until EOF.
     
+    // apply destructors for all levels 
     return 0;
 }
 
@@ -235,13 +236,18 @@ GroupNode* findGroup(string name){
 GroupNode* findShapeGroup(string name){
     GroupNode* p = gList->getHead();
     while(p != nullptr){
-        if(p->getShapeList()->getHead()->getShape()->getName() == name) return p;
+        ShapeList* shapelist = p->getShapeList();
+        ShapeNode* find = shapelist->getHead();
+        while(find != nullptr){
+            if(find->getShape()->getName() == name) return p;
+            find = find->getNext();
+        }
         p = p->getNext();
     }
     return nullptr;
 }
 
-void removeSource(string name){
+/*void removeSource(ShapeNode* s){
     GroupNode* p = gList->getHead();
     while(p != nullptr){
         ShapeList* shapelist = p->getShapeList();
@@ -259,3 +265,4 @@ void removeSource(string name){
         }
     }
 }
+*/
