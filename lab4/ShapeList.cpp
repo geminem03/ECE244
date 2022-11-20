@@ -41,7 +41,6 @@ using namespace std;
     }
 
     void ShapeList::insert(ShapeNode* s){
-        s->setNext(nullptr); // at end of list so points to null
         ShapeNode *p = head;
         if(head == nullptr){
             head = s; // if empty list s is the head
@@ -52,23 +51,29 @@ using namespace std;
             }
             p->setNext(s); // the next value is now the shape that s points to 
         }
+        s->setNext(nullptr); // at end of list so points to null
     }        
     ShapeNode* ShapeList::remove(string name){
-        ShapeNode *p = head;
+        ShapeNode *removeptr = head;
         ShapeNode *prev = nullptr;
-        if(p == nullptr) return nullptr; // returns nullptr is a node with name does not exist
-        if(p != nullptr && p->getShape()->getName() != name){
-            prev = p;           // traverse through the list until reach end 
-            p = p->getNext();   // or land of the pointer with the matching name 
+        if(head == nullptr){ // empty list
+            return nullptr;
         }
-        if(p == head) {
-            head = head->getNext();
-            return p; // returns a pointer to the removed node
+        if(removeptr != nullptr && removeptr->getShape()->getName() == name){
+            head = removeptr->getNext();
+            return removeptr;
         }
         else{
-            prev->setNext(p->getNext());
-            return p; // returns a pointer to the removed node
+            while(removeptr != nullptr && removeptr->getShape()->getName() != name){
+                prev = removeptr;
+                removeptr = removeptr->getNext();
+            }
+            if(removeptr == nullptr){
+                return nullptr;
+            }
+            prev->setNext(removeptr->getNext());
         }
+        return removeptr;
     }     
 
     void ShapeList:: print() const{

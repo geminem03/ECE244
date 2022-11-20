@@ -52,7 +52,9 @@ using namespace std;
     GroupNode* GroupList::remove(string name) {
 	    GroupNode* removeptr = head;
 	    GroupNode* prev = nullptr;
-
+        if(head == nullptr){ // empty list
+            return nullptr;
+        }
 	    if (removeptr != nullptr && removeptr->getName() == name) {
 		    head = removeptr->getNext();
 		    return removeptr;

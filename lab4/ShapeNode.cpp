@@ -31,6 +31,10 @@ using namespace std;
 
     void ShapeNode::setNext(ShapeNode* ptr) {next = ptr;}
 
-    void ShapeNode::print() const {myShape->draw();}
+    void ShapeNode::print() const {
+        if(myShape != nullptr){
+            myShape->draw();
+        }
+    }
 
 

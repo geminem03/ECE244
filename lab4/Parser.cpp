@@ -37,6 +37,8 @@ bool shapeExists(string name);
 bool groupExists(string name);
 ShapeNode* findShape(string name);
 GroupNode* findGroup(string name);
+GroupNode* findShapeGroup(string name);
+//implement trim function
 
 
 // Global variables 
@@ -62,7 +64,6 @@ int main() {
     while ( !cin.eof () ) {
         stringstream lineStream (line);
         lineStream >> command;
-
         if(command == keyWordsList[0]) { //create shape
             lineStream >> name;
             if (restrictedWord(name)) goto jmp; // check if the name is one of the restricted words
@@ -94,30 +95,47 @@ int main() {
         }
         else if(command == keyWordsList[2]){ // transfer to new group 
             lineStream >> shapeName;
+            if(shapeName == "pool"){
+                invalidName();
+                goto jmp;
+            }
             if(shapeExists(shapeName)){
                 lineStream >> groupName;
+                if(groupName == "pool"){
+                    invalidName();
+                    goto jmp;
+                }
                 if(groupExists(groupName)){
                     ShapeNode* srcShape = findShape(shapeName);
                     GroupNode* destGroup = findGroup(groupName);
+                    //GroupNode* srcGroup = findShapeGroup(shapeName);
                     destGroup->getShapeList()->insert(srcShape);
+
+
                     cout << "moved " << shapeName << " to " << groupName << endl;
+
                 }
                 else if(!groupExists(groupName)){
-                    groupNameNotFound(name);
+                    groupNameNotFound(groupName);
                     goto jmp;
                 }
             }
             else if(!shapeExists(shapeName)){
-                shapeNameNotFound(name);
+                shapeNameNotFound(shapeName);
                 goto jmp;
             }
         }
         else if(command == keyWordsList[3]){ // delete shape/group
             lineStream >> name;
+            if(name == "pool"){
+                invalidName();
+                goto jmp;
+            }
             if(shapeExists(name)){
+                GroupNode* shapelist = findShapeGroup(name);
                 ShapeNode* deleteShape = findShape(name);
-                if(deleteShape->getNext() != nullptr){
-                    delete deleteShape->getShape();
+                if(deleteShape != nullptr){
+                    delete shapelist->getShapeList()->remove(name);
                     cout << "deleted: " << name << endl;
                 }
                 else if(!shapeExists(name)){ 
@@ -213,4 +231,31 @@ GroupNode* findGroup(string name){
         p = p->getNext();
     }
     return nullptr;
+}
+GroupNode* findShapeGroup(string name){
+    GroupNode* p = gList->getHead();
+    while(p != nullptr){
+        if(p->getShapeList()->getHead()->getShape()->getName() == name) return p;
+        p = p->getNext();
+    }
+    return nullptr;
+}
+
+void removeSource(string name){
+    GroupNode* p = gList->getHead();
+    while(p != nullptr){
+        ShapeList* shapelist = p->getShapeList();
+        if(!shapelist) continue;
+        ShapeNode* removeSrc = shapelist->getHead();
+        ShapeNode* prev = nullptr;
+        while(removeSrc != nullptr){
+            if(removeSrc->getShape()->getName() != name) {
+                prev = removeSrc;
+                removeSrc = removeSrc->getNext();
+            }
+            else if(removeSrc->getShape()->getName() == name){
+                prev->setNext(removeSrc->getNext());
+            }
+        }
+    }
 }
