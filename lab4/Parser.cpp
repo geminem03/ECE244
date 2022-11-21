@@ -26,7 +26,7 @@ using namespace std;
 GroupList* gList;
 
 // Error functions 
-void invalidName () { cout << "Error: invalid name" << endl; }
+void invalidName () { cout << "error: invalid name" << endl; }
 void nameExists (string name) { cout << "error: name " << name << " exists" << endl; }
 void shapeNameNotFound (string name) { cout << "Error: shape " << name << " not found" << endl;}
 void groupNameNotFound (string name) { cout << "Error: group " << name << " not found" << endl;}
@@ -86,6 +86,10 @@ int main() {
         else if(command == keyWordsList[1]){ // create group
             lineStream >> name;
             if (restrictedWord(name)) goto jmp;
+            if(shapeExists(name)){
+                nameExists(name);
+                goto jmp;
+            }
             if(groupExists(name)){ // check if it's already been used 
                 nameExists(name);
                 goto jmp;
@@ -148,10 +152,12 @@ int main() {
                 GroupNode* deleteGroup = findGroup(name);
                 if(deleteGroup != nullptr){
                     ShapeNode *p = deleteGroup->getShapeList()->getHead();
+                    ShapeNode *shape = p;
                     while(p != nullptr){
-                        deleteGroup->getShapeList()->remove(deleteGroup->getShapeList()->getHead()->getShape()->getName());
-                        poolGroup->getShapeList()->insert(p);
-                        p = p->getNext();
+                        deleteGroup->getShapeList()->remove(shape->getShape()->getName());
+                        poolGroup->getShapeList()->insert(shape);
+                        p = deleteGroup->getShapeList()->getHead();
+                        shape = p;
                     }
                     delete gList->remove(name);
                     cout << name << ": deleted" << endl;
@@ -223,13 +229,14 @@ bool groupExists(string name){
 ShapeNode* findShape(string name){
     GroupNode* p = gList->getHead();
     while(p != nullptr){
-        ShapeList* shapelist = p->getShapeList();
-        if(!shapelist) continue;
-        ShapeNode* find = shapelist->getHead();
+        ShapeNode* find = p->getShapeList()->getHead();
         while(find != nullptr){
-            if(find->getShape()->getName() == name) return find;
+            if(find->getShape()->getName() == name){
+                return find;
+            }
             find = find->getNext();
         }
+        p = p->getNext();
     }
     return nullptr;
 }

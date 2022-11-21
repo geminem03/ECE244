@@ -59,6 +59,7 @@ using namespace std;
         if(head == nullptr){ // empty list
             return nullptr;
         }
+        // case for removing first node 
         if(removeptr != nullptr && removeptr->getShape()->getName() == name){
             head = removeptr->getNext();
             return removeptr;
