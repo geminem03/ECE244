@@ -27,7 +27,7 @@ GroupList* gList;
 
 // Error functions 
 void invalidName () { cout << "Error: invalid name" << endl; }
-void nameExists (string name) { cout << "Error: " << name << " exists" << endl; }
+void nameExists (string name) { cout << "error: name " << name << " exists" << endl; }
 void shapeNameNotFound (string name) { cout << "Error: shape " << name << " not found" << endl;}
 void groupNameNotFound (string name) { cout << "Error: group " << name << " not found" << endl;}
 
@@ -85,6 +85,7 @@ int main() {
         }
         else if(command == keyWordsList[1]){ // create group
             lineStream >> name;
+            if (restrictedWord(name)) goto jmp;
             if(groupExists(name)){ // check if it's already been used 
                 nameExists(name);
                 goto jmp;
@@ -106,13 +107,12 @@ int main() {
                     goto jmp;
                 }
                 if(groupExists(groupName)){
+                    //infinite loop in findShape function
                     ShapeNode* srcShape = findShape(shapeName);
                     GroupNode* destGroup = findGroup(groupName);
                     GroupNode* srcGroup = findShapeGroup(shapeName);
                     srcGroup->getShapeList()->remove(shapeName);
                     destGroup->getShapeList()->insert(srcShape);
-
-
                     cout << "moved " << shapeName << " to " << groupName << endl;
 
                 }
@@ -137,7 +137,7 @@ int main() {
                 ShapeNode* deleteShape = findShape(name);
                 if(deleteShape != nullptr){
                     delete shapelist->getShapeList()->remove(name);
-                    cout << "deleted: " << name << endl;
+                    cout << name << ": deleted" << endl;
                 }
                 else if(!shapeExists(name)){ 
                     shapeNameNotFound(name);
@@ -147,8 +147,14 @@ int main() {
             else if(groupExists(name)){
                 GroupNode* deleteGroup = findGroup(name);
                 if(deleteGroup != nullptr){
+                    ShapeNode *p = deleteGroup->getShapeList()->getHead();
+                    while(p != nullptr){
+                        deleteGroup->getShapeList()->remove(deleteGroup->getShapeList()->getHead()->getShape()->getName());
+                        poolGroup->getShapeList()->insert(p);
+                        p = p->getNext();
+                    }
                     delete gList->remove(name);
-                    cout << "deleted: " << name << endl;
+                    cout << name << ": deleted" << endl;
 
                 }
                 else if (!groupExists(name)){
@@ -213,6 +219,7 @@ bool groupExists(string name){
     }
     return false;
 }
+//infinite loop cause
 ShapeNode* findShape(string name){
     GroupNode* p = gList->getHead();
     while(p != nullptr){
@@ -247,23 +254,3 @@ GroupNode* findShapeGroup(string name){
     }
     return nullptr;
 }
-
-/*void removeSource(ShapeNode* s){
-    GroupNode* p = gList->getHead();
-    while(p != nullptr){
-        ShapeList* shapelist = p->getShapeList();
-        if(!shapelist) continue;
-        ShapeNode* removeSrc = shapelist->getHead();
-        ShapeNode* prev = nullptr;
-        while(removeSrc != nullptr){
-            if(removeSrc->getShape()->getName() != name) {
-                prev = removeSrc;
-                removeSrc = removeSrc->getNext();
-            }
-            else if(removeSrc->getShape()->getName() == name){
-                prev->setNext(removeSrc->getNext());
-            }
-        }
-    }
-}
-*/
