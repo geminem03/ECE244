@@ -188,8 +188,8 @@ int main() {
         getline(cin, line);
         
     }  // End input loop until EOF.
-    
-    // apply destructors for all levels 
+    // how to clear memory 
+    delete gList;
     return 0;
 }
 
