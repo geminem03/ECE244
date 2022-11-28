@@ -36,13 +36,18 @@ ShapesDB sdb(MAX_SHAPES,MAX_SHAPE_TYPES);
 
 // ECE244 Student: add your parser function prototypes here
 Shape* parseCircleCommand(stringstream& line);
+Shape* parseTriangleCommand(stringstream& line)
+Shape* parseRectangleCommand(stringstream& line)
 
 int main () {
 
     // Register the command parser call back functions
     sdb.registerShapeType("circle", &parseCircleCommand);
+    sdb.registerShapeType("rectangle", &parseRectangleCommand);
+    sdb.registerShapeType("triangle", &parseTriangleCommand);
     
     // Invoke the parser of the DB
+    
     // No new commands should be registered after this
     sdb.parseCommands();
     
